@@ -23,3 +23,11 @@ class LogConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(self.company_group_name, self.channel_name)
+
+    async def disconnect(self, event):
+        await self.send(text_data=json.dumps(event["data"]))
+
+    
+    @database_sync_to_async
+    def get_company_id(self, user):
+        return user.userprofile.company.id
